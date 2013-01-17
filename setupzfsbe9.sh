@@ -305,7 +305,7 @@ net.inet.ip.fw.verbose=1
 EOF
 
 cat > ${MNT}/${ROOTFS}/etc/make.conf << EOF
-CFLAG= -O2 -fno-strict-aliasing -pipe
+CFLAGS= -O2 -fno-strict-aliasing -pipe
 NO_PROFILE= true
 WITHOUT_X11= true
 USE_SVN= true
