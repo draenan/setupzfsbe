@@ -64,7 +64,7 @@ if [ ! -e "$MNT" ]; then
     mkdir -p $MNT
 fi
 
-if [ -z "$USE4K" ]; then 
+if [ -z "$USE4K" ]; then
     if [ -z "$DISK2" ]; then
         zpool create -m none -o cachefile=/var/tmp/zpool.cache $POOL /dev/gpt/disk0
     else
@@ -83,7 +83,7 @@ else
         zpool export $POOL
         gnop destroy /dev/gpt/disk0.nop
         gnop destroy /dev/gpt/disk1.nop
-    fi    
+    fi
     zpool import -o cachefile=/var/tmp/zpool.cache $POOL
 fi
 
@@ -283,7 +283,7 @@ if [ ! -z "$HOSTIP6" ]; then
 fi
 
 touch ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind
-chown bind ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind 
+chown bind ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind
 
 cat > ${MNT}/${ROOTFS}/boot/loader.conf << EOF
 ahci_load="YES"
@@ -331,13 +331,13 @@ EOF
 chroot ${MNT}/${ROOTFS} sh /tmp/chroot.sh
 rm ${MNT}/${ROOTFS}/tmp/chroot.sh
 
-printf "# Device\t\tMountpoint\tFStype\tOptions\tDump\tPass#\n" >  ${MNT}/${ROOTFS}/etc/fstab                 
-if [ -z "$DISK2" ]; then                                                                
+printf "# Device\t\tMountpoint\tFStype\tOptions\tDump\tPass#\n" >  ${MNT}/${ROOTFS}/etc/fstab
+if [ -z "$DISK2" ]; then
     printf "/dev/gpt/swap0\t\tnone\t\tswap\tsw\t0\t0\n" >> ${MNT}/${ROOTFS}/etc/fstab
-else                                                                                    
+else
     printf "/dev/mirror/swap\tnone\t\tswap\tsw\t0\t0\n" >> ${MNT}/${ROOTFS}/etc/fstab
-fi                                                                                      
-                                                                                        
+fi
+
 echo Unmounting ZFS filesystems...
 
 zfs umount -af
