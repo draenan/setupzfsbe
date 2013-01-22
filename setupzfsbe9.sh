@@ -311,6 +311,9 @@ WITHOUT_X11= true
 USE_SVN= true
 EOF
 
+sed -e '/set prompt/ s/".*"/"[%n@%m] %C04 %# "/' -e '/set prompt/ a\
+\	set ellipsis' -i '' ${MNT}/${ROOTFS}/root/.cshrc
+
 cat > ${MNT}/${ROOTFS}/tmp/chroot.sh << EOF
 resolvconf -u
 sed -e '/passwd_format/ s/md5/blf/' -e '/[[:space:]]*:path/ s#:path=\(.*\)\(/usr/local/sbin /usr/local/bin \)\(.*\):\\\\#:path=\2\1\3:\\\\#' -i '' /etc/login.conf
