@@ -282,6 +282,9 @@ if [ ! -z "$HOSTIP6" ]; then
     printf "${HOSTIP6}\t${HOSTNAME}\t${HOSTNAME}.${DOMAIN}\n" >> ${MNT}/${ROOTFS}/etc/hosts
 fi
 
+touch ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind
+chown bind ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind 
+
 cat > ${MNT}/${ROOTFS}/boot/loader.conf << EOF
 ahci_load="YES"
 zfs_load="YES"
