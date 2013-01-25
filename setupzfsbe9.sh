@@ -237,8 +237,8 @@ named_enable="YES"
 
 # SAMBA server
 #
-#smbd_enable="YES"
-#nmbd_enable="YES"
+#samba_enable="YES"
+#winbindd_enable="NO"
 
 # Avahi Bonjour/Zeroconf responder
 #
