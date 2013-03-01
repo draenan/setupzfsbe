@@ -338,6 +338,13 @@ else
     printf "/dev/mirror/swap\tnone\t\tswap\tsw\t0\t0\n" >> ${MNT}/${ROOTFS}/etc/fstab
 fi
 
+if [ -e "./beupdate" ]; then
+    if [ ! -e "${MNT}/${ROOTFS}/usr/local/sbin" ]; then
+        mkdir -p ${MNT}/${ROOTFS}/usr/local/sbin
+    fi
+    install -o root -g wheel -m 0740 ./beupdate ${MNT}/${ROOTFS}/usr/local/sbin/beupdate
+fi
+
 echo Unmounting ZFS filesystems...
 
 zfs umount -af
