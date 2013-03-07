@@ -205,6 +205,8 @@ named_enable="YES"
 # OpenVPN
 #
 #openvpn_enable="YES"
+#openvpn_tcp_enable="YES"
+#openvpn_tcp_configfile="/usr/local/etc/openvpn/openvpn_tcp.conf"
 #gateway_enable="YES"
 
 # OpenLDAP Server
