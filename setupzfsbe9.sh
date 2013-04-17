@@ -19,7 +19,7 @@ DISK2="ada1"
 
 MNT="/tmp/mnt"
 POOL="rpool"
-BE="freebsd-90rp0"
+BE="freebsd-91rp0"
 ROOTFS="${POOL}/ROOT/${BE}"
 
 HOSTNAME="thalia-dev"
@@ -91,7 +91,7 @@ zfs set checksum=fletcher4 $POOL
 
 zfs create                                                      ${POOL}/ROOT
 zfs create -o mountpoint=${MNT}/${ROOTFS}                       $ROOTFS
-zfs create -o mountpoint=${MNT}/home                            ${POOL}/HOME
+zfs create -o mountpoint=none                                   ${POOL}/HOME
 
 zfs create -o compression=on     -o exec=on    -o setuid=off    ${ROOTFS}/tmp
 zfs create                                                      ${ROOTFS}/usr
@@ -247,6 +247,10 @@ named_enable="YES"
 #dbus_enable="YES"
 #avahi_daemon_enable="YES"
 
+# Nginx web server
+#
+#nginx_enable="YES"
+
 EOF
 
 sed -e '5,$ d' -i '' ${MNT}/${ROOTFS}/etc/motd
@@ -321,7 +325,7 @@ sed -e '/set prompt/ s/".*"/"[%n@%m] %C04 %# "/' -e '/set prompt/ a\
 
 cat > ${MNT}/${ROOTFS}/tmp/chroot.sh << EOF
 resolvconf -u
-sed -e '/passwd_format/ s/md5/sha512/' -e '/[[:space:]]*:path/ s#:path=\(.*\)\(/usr/local/sbin /usr/local/bin \)\(.*\):\\\\#:path=\2\1\3:\\\\#' -i '' /etc/login.conf
+sed -e '/[[:space:]]*:path/ s#:path=\(.*\)\(/usr/local/sbin /usr/local/bin \)\(.*\):\\\\#:path=\2\1\3:\\\\#' -i '' /etc/login.conf
 cap_mkdb /etc/login.conf
 echo Setting root password...
 passwd
@@ -354,7 +358,6 @@ zfs set mountpoint=legacy $ROOTFS
 zfs set mountpoint=/usr   ${ROOTFS}/usr
 zfs set mountpoint=/var   ${ROOTFS}/var
 zfs set mountpoint=/tmp   ${ROOTFS}/tmp
-zfs set mountpoint=/home  ${POOL}/HOME
 zfs umount -af
 
 echo Installation complete.
