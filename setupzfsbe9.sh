@@ -215,11 +215,6 @@ named_enable="YES"
 #slapd_flags='-h "ldapi://%2fvar%2frun%2fopenldap%2fldapi/ ldap:///"'
 #slapd_sockets="/var/run/openldap/ldapi"
 
-# Cyrus SASL Auth Daemon
-#
-#saslauthd_enable="NO"
-#saslauthd_flags="-a ldap"
-
 # Name Service Cache Daemon
 #
 #nscd_enable="YES"
@@ -320,7 +315,7 @@ WITHOUT_X11= true
 USE_SVN= true
 EOF
 
-sed -e '/set prompt/ s/".*"/"[%n@%m] %C04 %# "/' -e '/set prompt/ a\
+sed -e '/set prompt = / s/".*"/"[%n@%m] %C04 %# "/' -e '/set promptchars/ a\
 \	set ellipsis' -i '' ${MNT}/${ROOTFS}/root/.cshrc
 
 cat > ${MNT}/${ROOTFS}/tmp/chroot.sh << EOF
@@ -348,7 +343,7 @@ if [ -e "./beupdate" ]; then
     if [ ! -e "${MNT}/${ROOTFS}/usr/local/sbin" ]; then
         mkdir -p ${MNT}/${ROOTFS}/usr/local/sbin
     fi
-    install -o root -g wheel -m 0740 ./beupdate ${MNT}/${ROOTFS}/usr/local/sbin/beupdate
+    install -o root -g wheel -m 0750 ./beupdate ${MNT}/${ROOTFS}/usr/local/sbin/beupdate
 fi
 
 echo Unmounting ZFS filesystems...
