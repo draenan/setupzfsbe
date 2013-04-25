@@ -202,13 +202,6 @@ named_enable="YES"
 #apcupsd_enable="YES"
 #apcupsd_flags=""
 
-# OpenVPN
-#
-#openvpn_enable="YES"
-#openvpn_tcp_enable="YES"
-#openvpn_tcp_configfile="/usr/local/etc/openvpn/openvpn_tcp.conf"
-#gateway_enable="YES"
-
 # OpenLDAP Server
 #
 #slapd_enable="YES"
@@ -218,6 +211,13 @@ named_enable="YES"
 # Name Service Cache Daemon
 #
 #nscd_enable="YES"
+
+# OpenVPN
+#
+#openvpn_enable="YES"
+#openvpn_tcp_enable="YES"
+#openvpn_tcp_configfile="/usr/local/etc/openvpn/openvpn_tcp.conf"
+#gateway_enable="YES"
 
 # DevFS rules
 #devfs_system_ruleset="system"
