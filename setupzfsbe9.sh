@@ -19,19 +19,19 @@ DISK2="ada1"
 
 MNT="/tmp/mnt"
 POOL="rpool"
-BE="freebsd-91rp0"
+BE="freebsd-92r-p0"
 ROOTFS="${POOL}/ROOT/${BE}"
 
 HOSTNAME="thalia-dev"
 HOSTIP="192.168.5.160"
-HOSTIP6="2001:44b8:4170:2600:250:56ff:fe36:9dc"
+HOSTIP6=
 HOSTIP_ALIAS="192.168.5.161"
 GATEWAY="192.168.5.254"
 IF="em0"
 
 DOMAIN="draenan.net"
 NAMESERVER="127.0.0.1"
-NAMESERVER6="::1"
+NAMESERVER6=
 
 ATKBD_DISABLED="0"
 
@@ -95,19 +95,19 @@ zfs create -o mountpoint=none                                   ${POOL}/HOME
 
 zfs create -o compression=on     -o exec=on    -o setuid=off    ${ROOTFS}/tmp
 zfs create                                                      ${ROOTFS}/usr
-zfs create -o compression=lzjb                 -o setuid=off    ${ROOTFS}/usr/ports
+zfs create -o compression=lz4                  -o setuid=off    ${ROOTFS}/usr/ports
 zfs create -o compression=off    -o exec=off   -o setuid=off    ${ROOTFS}/usr/ports/distfiles
 zfs create -o compression=off    -o exec=off   -o setuid=off    ${ROOTFS}/usr/ports/packages
-zfs create -o compression=lzjb   -o exec=off   -o setuid=off    ${ROOTFS}/usr/src
+zfs create -o compression=lz4    -o exec=off   -o setuid=off    ${ROOTFS}/usr/src
 zfs create                                                      ${ROOTFS}/var
-zfs create -o compression=lzjb   -o exec=off   -o setuid=off    ${ROOTFS}/var/crash
+zfs create -o compression=lz4    -o exec=off   -o setuid=off    ${ROOTFS}/var/crash
 zfs create                       -o exec=off   -o setuid=off    ${ROOTFS}/var/db
-zfs create -o compression=lzjb   -o exec=on    -o setuid=off    ${ROOTFS}/var/db/pkg
+zfs create -o compression=lz4    -o exec=on    -o setuid=off    ${ROOTFS}/var/db/pkg
 zfs create                       -o exec=off   -o setuid=off    ${ROOTFS}/var/empty
-zfs create -o compression=lzjb   -o exec=off   -o setuid=off    ${ROOTFS}/var/log
-zfs create -o compression=gzip   -o exec=off   -o setuid=off    ${ROOTFS}/var/mail
+zfs create -o compression=lz4    -o exec=off   -o setuid=off    ${ROOTFS}/var/log
+zfs create -o compression=lz4    -o exec=off   -o setuid=off    ${ROOTFS}/var/mail
 zfs create                       -o exec=off   -o setuid=off    ${ROOTFS}/var/run
-zfs create -o compression=lzjb   -o exec=on    -o setuid=off    ${ROOTFS}/var/tmp
+zfs create -o compression=lz4    -o exec=on    -o setuid=off    ${ROOTFS}/var/tmp
 
 chmod 1777 ${MNT}/${ROOTFS}/tmp
 chmod 1777 ${MNT}/${ROOTFS}/var/tmp
@@ -133,123 +133,69 @@ echo "Configuring files..."
 cat > ${MNT}/${ROOTFS}/etc/rc.conf << EOF
 zfs_enable="YES"
 
-# Networking
-#
+kldxref_enable="YES"
+kldxref_clobber="YES"
+
 hostname="${HOSTNAME}.${DOMAIN}"
 ifconfig_${IF}="inet ${HOSTIP} netmask 255.255.255.0"
 ifconfig_${IF}_alias0="inet ${HOSTIP_ALIAS} netmask 255.255.255.0"
-ifconfig_${IF}_ipv6="inet6 accept_rtadv"
 defaultrouter="${GATEWAY}"
 
-# Firewall
-#
-#firewall_enable="YES"
-#firewall_script="/usr/local/etc/ipfw.rules"
-#firewall_logging="YES"
-#firewall_quiet="YES"
+firewall_enable="NO"
+firewall_script="/usr/local/etc/ipfw/ipfw.rules"
+firewall_logging="YES"
+firewall_quiet="YES"
 
-# Fail2ban
-#
-#fail2ban_enable="YES"
-
-# Secure Shell
-#
 sshd_enable="YES"
 
-# Network Time Protocol
-#
 ntpd_enable="YES"
 
-# Syslog
-#
-#syslogd_flags="-l /var/db/dhcpd/var/run/log -l /var/db/dhcpd6/var/run/log -c"
-
-# ISC BIND
-#
 named_enable="YES"
 
-# pixelserv for DNS-based ad-block
-#
-#pixelserv_enable="YES"
+syslogd_flags="-l /var/db/dhcpd/var/run/log -c"
 
-# ISC DHCPD
-#
-#dhcpd_enable="YES"
-#dhcpd_flags="-q"
-#dhcpd_conf="/usr/local/etc/dhcpd.conf"
-#dhcpd_ifaces="$IF"
-#dhcpd_withumask="022"
-#dhcpd_chuser_enable="YES"
-#dhcpd_withuser="dhcpd"
-#dhcpd_withgroup="dhcpd"
-#dhcpd_chroot_enable="YES"
-#dhcpd_devfs_enable="YES"
+dhcpd_enable="NO"
+dhcpd_flags="-q"
+dhcpd_chroot_enable="YES"
 
-#dhcpd6_enable="YES"
-#dhcpd6_flags="-q"
-#dhcpd6_conf="/usr/local/etc/dhcpd6.conf"
-#dhcpd6_ifaces="$IF"
-#dhcpd6_withumask="022"
-#dhcpd6_chuser_enable="YES"
-#dhcpd6_withuser="dhcpd"
-#dhcpd6_withgroup="dhcpd"
-#dhcpd6_chroot_enable="YES"
-#dhcpd6_devfs_enable="YES"
-#dhcpd6_rootdir="/var/db/dhcpd6"
+apcupsd_enable="NO"
+apcupsd_flags=""
 
-# APC UPS Daemon
-#
-#apcupsd_enable="YES"
-#apcupsd_flags=""
+fail2ban_enable="NO"
 
-# OpenLDAP Server
-#
-#slapd_enable="YES"
-#slapd_flags='-h "ldapi://%2fvar%2frun%2fopenldap%2fldapi/ ldap:///"'
-#slapd_sockets="/var/run/openldap/ldapi"
+pixelserv_enable="NO"
 
-# Name Service Cache Daemon
-#
-#nscd_enable="YES"
+slapd_enable="NO"
+slapd_flags='-h "ldapi://%2fvar%2frun%2fopenldap%2fldapi/ ldap:///"'
+slapd_sockets="/var/run/openldap/ldapi"
+nscd_enable="YES"
 
-# OpenVPN
-#
-#openvpn_enable="YES"
-#openvpn_tcp_enable="YES"
-#openvpn_tcp_configfile="/usr/local/etc/openvpn/openvpn_tcp.conf"
-#gateway_enable="YES"
+openvpn_enable="NO"
+openvpn_tcp_enable="NO"
+openvpn_tcp_configfile="/usr/local/etc/openvpn/openvpn_tcp.conf"
+gateway_enable="YES"
 
-# DevFS rules
-#devfs_system_ruleset="system"
+cupsd_enable="NO"
 
-# CUPS print server
-#
-#cupsd_enable="YES"
+dbus_enable="NO"
+avahi_daemon_enable="NO"
 
-# Netatalk for Apple File Protocol
-#
-#netatalk_enable="YES"
-#afpd_enable="YES"
-#cnid_metad_enable="YES"
+netatalk_enable="NO"
+afpd_enable="NO"
+cnid_metad_enable="NO"
 
-# SAMBA server
-#
-#samba_enable="YES"
-#winbindd_enable="NO"
+samba_enable="NO"
+winbindd_enable="NO"
 
-# Avahi Bonjour/Zeroconf responder
-#
-#dbus_enable="YES"
-#avahi_daemon_enable="YES"
-
-# Nginx web server
-#
-#nginx_enable="YES"
+nginx_enable="NO"
+php_fpm_enable="NO"
+fcgiwrap_enable="NO"
+fcgiwrap_user="www"
 
 EOF
 
 sed -e '5,$ d' -i '' ${MNT}/${ROOTFS}/etc/motd
-sed -e 's/#PermitRootLogin no/PermitRootLogin yes/' -e 's_#Banner none_Banner /etc/banner_' -i '' ${MNT}/${ROOTFS}/etc/ssh/sshd_config
+sed -e 's_#Banner none_Banner /etc/banner_' -i '' ${MNT}/${ROOTFS}/etc/ssh/sshd_config
 
 cat > ${MNT}/${ROOTFS}/etc/banner << EOF
 +-----------------------------------------------------------------+
@@ -311,12 +257,28 @@ EOF
 cat > ${MNT}/${ROOTFS}/etc/make.conf << EOF
 CFLAGS= -O2 -fno-strict-aliasing -pipe
 NO_PROFILE= true
-WITHOUT_X11= true
+OPTIONS_UNSET= X11
 USE_SVN= true
+WITH_PKNG= yes
 EOF
 
-sed -e '/set prompt = / s/".*"/"[%n@%m] %C04 %# "/' -e '/set promptchars/ a\
-\	set ellipsis' -i '' ${MNT}/${ROOTFS}/root/.cshrc
+sed -e '/set prompt = / s/".*"/"[%n@%m] %C04 %# "/' \
+    -e '/set promptchars/ a\
+\	set ellipsis' \
+    -e '/set path = / s^set path = (\(.*\)\(/usr/local/sbin /usr/local/bin \)\(.*\))^set path = (\2\1\3)^' \
+    -i '' ${MNT}/${ROOTFS}/root/.cshrc
+
+sed -e '/set prompt = / s/".*"/"[%n@%m] %c04 %# "/' \
+    -e '/set promptchars/ a\
+\	set ellipsis' \
+    -e '/set path = / s^set path = (\(.*\)\(/usr/local/sbin /usr/local/bin \)\(.*\))^set path = (\2\1\3)^' \
+    -i '' ${MNT}/${ROOTFS}/usr/share/skel/dot.cshrc
+
+sed -e '/PATH=/ s^PATH=\(.*\)\(/usr/local/sbin:/usr/local/bin:\)\(.*\)^PATH=\2\1\3^' \
+    -i '' ${MNT}/${ROOTFS}/usr/share/skel/dot.profile
+
+sed -e '/^IgnorePaths/ s^$^ /boot/kernel/linker.hints^' \
+    -i '' ${MNT}/${ROOTFS}/etc/freebsd-update.conf
 
 cat > ${MNT}/${ROOTFS}/tmp/chroot.sh << EOF
 resolvconf -u
@@ -327,6 +289,7 @@ passwd
 tzsetup
 echo Configuring mail aliases...
 cd /etc/mail; make aliases
+chmod 700 /root
 EOF
 
 chroot ${MNT}/${ROOTFS} sh /tmp/chroot.sh
