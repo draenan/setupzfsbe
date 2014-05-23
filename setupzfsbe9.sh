@@ -259,7 +259,7 @@ CFLAGS= -O2 -fno-strict-aliasing -pipe
 NO_PROFILE= true
 OPTIONS_UNSET= X11
 USE_SVN= true
-WITH_PKNG= yes
+WITH_PKGNG= yes
 EOF
 
 sed -e '/set prompt = / s/".*"/"[%n@%m] %C04 %# "/' \
