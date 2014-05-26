@@ -175,6 +175,8 @@ openvpn_tcp_enable="NO"
 openvpn_tcp_configfile="/usr/local/etc/openvpn/openvpn_tcp.conf"
 gateway_enable="YES"
 
+#devfs_system_ruleset="system"
+
 cupsd_enable="NO"
 
 dbus_enable="NO"
