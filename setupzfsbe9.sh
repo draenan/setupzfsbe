@@ -31,7 +31,7 @@ IF="em0"
 
 DOMAIN="draenan.net"
 NAMESERVER="127.0.0.1"
-NAMESERVER6=
+NAMESERVER6="::1"
 
 ATKBD_DISABLED="0"
 
@@ -139,6 +139,7 @@ kldxref_clobber="YES"
 hostname="${HOSTNAME}.${DOMAIN}"
 ifconfig_${IF}="inet ${HOSTIP} netmask 255.255.255.0"
 ifconfig_${IF}_alias0="inet ${HOSTIP_ALIAS} netmask 255.255.255.0"
+ifconfig_${IF}_ipv6="inet6 accept_rtadv"
 defaultrouter="${GATEWAY}"
 
 firewall_enable="NO"
@@ -179,12 +180,9 @@ gateway_enable="YES"
 
 cupsd_enable="NO"
 
-dbus_enable="NO"
-avahi_daemon_enable="NO"
+mdnsresponder_enable="NO"
 
 netatalk_enable="NO"
-afpd_enable="NO"
-cnid_metad_enable="NO"
 
 samba_enable="NO"
 winbindd_enable="NO"
