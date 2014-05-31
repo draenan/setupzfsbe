@@ -178,9 +178,10 @@ gateway_enable="YES"
 
 #devfs_system_ruleset="system"
 
-cupsd_enable="NO"
-
 mdnsd_enable="NO"
+
+cupsd_enable="NO"
+dbus_enable="NO"
 
 netatalk_enable="NO"
 
