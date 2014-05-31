@@ -180,7 +180,7 @@ gateway_enable="YES"
 
 cupsd_enable="NO"
 
-mdnsresponder_enable="NO"
+mdnsd_enable="NO"
 
 netatalk_enable="NO"
 
