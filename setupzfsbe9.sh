@@ -305,11 +305,11 @@ else
 fi
 printf "fdesc\t\t\t/dev/fd\t\tfdescfs\trw\t0\t0" >> ${MNT}/${ROOTFS}/etc/fstab
 
-if [ -e "./beupdate" ]; then
+if [ -e "/root/beupdate" ]; then
     if [ ! -e "${MNT}/${ROOTFS}/usr/local/sbin" ]; then
         mkdir -p ${MNT}/${ROOTFS}/usr/local/sbin
     fi
-    install -o root -g wheel -m 0750 ./beupdate ${MNT}/${ROOTFS}/usr/local/sbin/beupdate
+    install -o root -g wheel -m 0750 /root/beupdate ${MNT}/${ROOTFS}/usr/local/sbin/beupdate
 fi
 
 echo Unmounting ZFS filesystems...
