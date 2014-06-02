@@ -55,7 +55,7 @@ if [ ! -z "$DISK2" ]; then
     gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 $DISK2
 
     kldload /boot/kernel/geom_mirror.ko
-    gmirror label -b prefer swap gpt/swap0 gpt/swap1
+    gmirror label -b load swap gpt/swap0 gpt/swap1
 fi
 
 echo "Creating $POOL and filesystems..."
