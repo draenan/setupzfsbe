@@ -180,8 +180,9 @@ gateway_enable="YES"
 
 mdnsd_enable="NO"
 
-cupsd_enable="NO"
 dbus_enable="NO"
+
+cupsd_enable="NO"
 
 netatalk_enable="NO"
 
