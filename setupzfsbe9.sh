@@ -302,6 +302,7 @@ if [ -z "$DISK2" ]; then
 else
     printf "/dev/mirror/swap\tnone\t\tswap\tsw\t0\t0\n" >> ${MNT}/${ROOTFS}/etc/fstab
 fi
+printf "fdesc\t\t\t/dev/fd\t\tfdescfs\trw\t0\t0" >> ${MNT}/${ROOTFS}/etc/fstab
 
 if [ -e "./beupdate" ]; then
     if [ ! -e "${MNT}/${ROOTFS}/usr/local/sbin" ]; then
