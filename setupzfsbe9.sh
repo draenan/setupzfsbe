@@ -169,7 +169,7 @@ pixelserv_enable="NO"
 slapd_enable="NO"
 slapd_flags='-h "ldapi://%2fvar%2frun%2fopenldap%2fldapi/ ldap:///"'
 slapd_sockets="/var/run/openldap/ldapi"
-nscd_enable="YES"
+nscd_enable="NO"
 
 openvpn_enable="NO"
 openvpn_tcp_enable="NO"
