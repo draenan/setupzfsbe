@@ -264,6 +264,10 @@ USE_SVN= true
 WITH_PKGNG= yes
 EOF
 
+cat > ${MNT}/${ROOTFS}/etc/src.conf << EOF
+WITHOUT_GAMES= true
+EOF
+
 sed -e '/set prompt = / s/".*"/"[%n@%m] %C04 %# "/' \
     -e '/set promptchars/ a\
 \	set ellipsis' \
