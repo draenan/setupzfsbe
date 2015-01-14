@@ -115,14 +115,15 @@ mkdir -p ${MNT}/${ROOTFS}/usr/local/etc
 
 zpool set bootfs=${ROOTFS} $POOL
 
-echo "Installing FreeBSD..."
+echo -n "Installing FreeBSD... "
 
 cd /usr/freebsd-dist
 DESTDIR=${MNT}/${ROOTFS}
 export DESTDIR
 for file in base.txz lib32.txz kernel.txz doc.txz ports.txz src.txz; do
-    (cat $file | tar --unlink -xpJf - -C ${DESTDIR:-/})
+    (echo -n "$file "; cat $file | tar --unlink -xpJf - -C ${DESTDIR:-/})
 done;
+echo
 
 cp /var/tmp/zpool.cache ${MNT}/${ROOTFS}/boot/zfs/zpool.cache
 
