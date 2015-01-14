@@ -143,6 +143,8 @@ ifconfig_${IF}_alias0="inet ${HOSTIP_ALIAS} netmask 255.255.255.0"
 ifconfig_${IF}_ipv6="inet6 accept_rtadv"
 defaultrouter="${GATEWAY}"
 
+#cloned_interfaces="\${cloned_interfaces} lo1 lo2"
+
 firewall_enable="NO"
 firewall_script="/usr/local/etc/ipfw/ipfw.rules"
 firewall_logging="YES"
@@ -151,10 +153,11 @@ firewall_quiet="YES"
 sshd_enable="YES"
 
 ntpd_enable="YES"
+openntpd_enable="NO"
 
 named_enable="YES"
 
-syslogd_flags="-l /var/db/dhcpd/var/run/log -c"
+syslogd_flags="-l /var/db/dhcpd/var/run/log -c -b ${HOSTIP}"
 
 dhcpd_enable="NO"
 dhcpd_flags="-q"
@@ -168,7 +171,7 @@ fail2ban_enable="NO"
 pixelserv_enable="NO"
 
 slapd_enable="NO"
-slapd_flags='-h "ldapi://%2fvar%2frun%2fopenldap%2fldapi/ ldap:///"'
+slapd_flags='-h "ldapi:///var/run/openldap/ldapi/ ldap://${HOSTIP} ldaps://${HOSTIP}"'
 slapd_sockets="/var/run/openldap/ldapi"
 nscd_enable="NO"
 
@@ -194,6 +197,8 @@ nginx_enable="NO"
 php_fpm_enable="NO"
 fcgiwrap_enable="NO"
 fcgiwrap_user="www"
+
+ezjail_enable="NO"
 
 EOF
 
