@@ -19,7 +19,7 @@ DISK2="ada1"
 
 MNT="/tmp/mnt"
 POOL="rpool"
-BE="freebsd-92r-p0"
+BE="freebsd-93r-p0"
 ROOTFS="${POOL}/ROOT/${BE}"
 
 HOSTNAME="thalia-dev"
