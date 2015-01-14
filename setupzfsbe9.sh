@@ -18,7 +18,7 @@ DISK2="ada1"
 #USE4K="YES"
 
 MNT="/tmp/mnt"
-POOL="rpool"
+POOL="zroot"
 BE="freebsd-93r-p0"
 ROOTFS="${POOL}/ROOT/${BE}"
 
@@ -89,29 +89,32 @@ fi
 
 zfs set checksum=fletcher4 $POOL
 
-zfs create                                                      ${POOL}/ROOT
-zfs create -o mountpoint=${MNT}/${ROOTFS}                       $ROOTFS
-zfs create -o mountpoint=none                                   ${POOL}/HOME
+zfs create ${POOL}/ROOT
+zfs create -o mountpoint=${MNT}/${ROOTFS} $ROOTFS
+zfs create -o mountpoint=none ${POOL}/HOME
 
-zfs create -o compression=on     -o exec=on    -o setuid=off    ${ROOTFS}/tmp
-zfs create                                                      ${ROOTFS}/usr
-zfs create -o compression=lz4                  -o setuid=off    ${ROOTFS}/usr/ports
-zfs create -o compression=off    -o exec=off   -o setuid=off    ${ROOTFS}/usr/ports/distfiles
-zfs create -o compression=off    -o exec=off   -o setuid=off    ${ROOTFS}/usr/ports/packages
-zfs create -o compression=lz4    -o exec=off   -o setuid=off    ${ROOTFS}/usr/src
-zfs create                                                      ${ROOTFS}/var
-zfs create -o compression=lz4    -o exec=off   -o setuid=off    ${ROOTFS}/var/crash
-zfs create                       -o exec=off   -o setuid=off    ${ROOTFS}/var/db
-zfs create -o compression=lz4    -o exec=on    -o setuid=off    ${ROOTFS}/var/db/pkg
-zfs create                       -o exec=off   -o setuid=off    ${ROOTFS}/var/empty
-zfs create -o compression=lz4    -o exec=off   -o setuid=off    ${ROOTFS}/var/log
-zfs create -o compression=lz4    -o exec=off   -o setuid=off    ${ROOTFS}/var/mail
-zfs create                       -o exec=off   -o setuid=off    ${ROOTFS}/var/run
-zfs create -o compression=lz4    -o exec=on    -o setuid=off    ${ROOTFS}/var/tmp
+mkdir -p ${MNT}/${ROOTFS}/usr
+mkdir ${MNT}/${ROOTFS}/var
+
+zfs create -o mountpoint=${MNT}/${ROOTFS}/tmp -o compression=on -o exec=on -o setuid=off ${POOL}/tmp
+zfs create -o mountpoint=${MNT}/${ROOTFS}/usr -o canmount=off ${POOL}/usr
+zfs create -o compression=off ${POOL}/usr/local
+zfs create -o compression=lz4 -o setuid=off ${POOL}/usr/ports
+zfs create -o compression=off -o exec=off -o setuid=off ${POOL}/usr/ports/distfiles
+zfs create -o compression=off -o exec=off -o setuid=off ${POOL}/usr/ports/packages
+zfs create -o compression=lz4 -o exec=off -o setuid=off ${POOL}/usr/src
+zfs create -o mountpoint=${MNT}/${ROOTFS}/var -o canmount=off ${POOL}/var
+zfs create -o compression=lz4 -o exec=off -o setuid=off ${POOL}/var/crash
+zfs create -o exec=off -o setuid=off ${POOL}/var/db
+zfs create -o compression=lz4 -o exec=on  -o setuid=off ${POOL}/var/db/pkg
+zfs create -o exec=off -o setuid=off ${POOL}/var/empty
+zfs create -o compression=lz4 -o exec=off -o setuid=off ${POOL}/var/log
+zfs create -o compression=lz4 -o exec=off -o setuid=off ${POOL}/var/mail
+zfs create -o exec=off -o setuid=off ${POOL}/var/run
+zfs create -o compression=lz4 -o exec=on -o setuid=off ${POOL}/var/tmp
 
 chmod 1777 ${MNT}/${ROOTFS}/tmp
 chmod 1777 ${MNT}/${ROOTFS}/var/tmp
-mkdir -p ${MNT}/${ROOTFS}/usr/local/etc
 
 zpool set bootfs=${ROOTFS} $POOL
 
@@ -127,7 +130,7 @@ echo
 
 cp /var/tmp/zpool.cache ${MNT}/${ROOTFS}/boot/zfs/zpool.cache
 
-zfs set readonly=on ${ROOTFS}/var/empty
+zfs set readonly=on ${POOL}/var/empty
 
 echo "Configuring files..."
 
@@ -315,20 +318,13 @@ else
 fi
 printf "fdesc\t\t\t/dev/fd\t\tfdescfs\trw\t0\t0\n" >> ${MNT}/${ROOTFS}/etc/fstab
 
-if [ -e "/root/beupdate" ]; then
-    if [ ! -e "${MNT}/${ROOTFS}/usr/local/sbin" ]; then
-        mkdir -p ${MNT}/${ROOTFS}/usr/local/sbin
-    fi
-    install -o root -g wheel -m 0750 /root/beupdate ${MNT}/${ROOTFS}/usr/local/sbin/beupdate
-fi
-
 echo Unmounting ZFS filesystems...
 
 zfs umount -af
 zfs set mountpoint=legacy $ROOTFS
-zfs set mountpoint=/usr   ${ROOTFS}/usr
-zfs set mountpoint=/var   ${ROOTFS}/var
-zfs set mountpoint=/tmp   ${ROOTFS}/tmp
+zfs set mountpoint=/usr   ${POOL}/usr
+zfs set mountpoint=/var   ${POOL}/var
+zfs set mountpoint=/tmp   ${POOL}/tmp
 zfs umount -af
 
 echo Installation complete.
