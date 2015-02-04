@@ -242,6 +242,7 @@ fi
 
 touch ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind
 chown bind ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind
+chmod 600 ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind
 
 cat > ${MNT}/${ROOTFS}/boot/loader.conf << EOF
 ahci_load="YES"
