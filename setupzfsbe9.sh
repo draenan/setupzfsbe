@@ -245,6 +245,7 @@ chown bind ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind
 chmod 600 ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind
 
 cat > ${MNT}/${ROOTFS}/boot/loader.conf << EOF
+accf_http_load="YES"
 ahci_load="YES"
 zfs_load="YES"
 aio_load="YES"
