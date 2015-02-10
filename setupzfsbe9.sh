@@ -323,11 +323,10 @@ printf "fdesc\t\t\t/dev/fd\t\tfdescfs\trw\t0\t0\n" >> ${MNT}/${ROOTFS}/etc/fstab
 echo Unmounting ZFS filesystems...
 
 zfs umount -af
-zfs set mountpoint=legacy $ROOTFS
+zfs set mountpoint=/      $ROOTFS
 zfs set mountpoint=/usr   ${POOL}/usr
 zfs set mountpoint=/var   ${POOL}/var
 zfs set mountpoint=/tmp   ${POOL}/tmp
-zfs umount -af
 
 echo Installation complete.
 
