@@ -19,7 +19,7 @@ DISK2="ada1"
 
 MNT="/tmp/mnt"
 POOL="zroot"
-BE="freebsd-93r-p0"
+BE="default"
 ROOTFS="${POOL}/ROOT/${BE}"
 
 HOSTNAME="thalia-dev"
@@ -88,30 +88,23 @@ else
 fi
 
 zfs set checksum=fletcher4 $POOL
+zfs set compression=lz4 $POOL
+zfs set atime=off $POOL
 
 zfs create ${POOL}/ROOT
 zfs create -o mountpoint=${MNT}/${ROOTFS} $ROOTFS
-zfs create -o mountpoint=none ${POOL}/HOME
-
 mkdir -p ${MNT}/${ROOTFS}/usr
 mkdir ${MNT}/${ROOTFS}/var
 
-zfs create -o mountpoint=${MNT}/${ROOTFS}/tmp -o compression=on -o exec=on -o setuid=off ${POOL}/tmp
+zfs create -o mountpoint=${MNT}/${ROOTFS}/tmp -o exec=on -o setuid=off ${POOL}/tmp
 zfs create -o mountpoint=${MNT}/${ROOTFS}/usr -o canmount=off ${POOL}/usr
-zfs create -o compression=off ${POOL}/usr/local
-zfs create -o compression=lz4 -o setuid=off ${POOL}/usr/ports
-zfs create -o compression=off -o exec=off -o setuid=off ${POOL}/usr/ports/distfiles
-zfs create -o compression=off -o exec=off -o setuid=off ${POOL}/usr/ports/packages
-zfs create -o compression=lz4 -o exec=off -o setuid=off ${POOL}/usr/src
+zfs create ${POOL}/usr/home
+zfs create -o setuid=off ${POOL}/usr/ports
 zfs create -o mountpoint=${MNT}/${ROOTFS}/var -o canmount=off ${POOL}/var
-zfs create -o compression=lz4 -o exec=off -o setuid=off ${POOL}/var/crash
-zfs create -o exec=off -o setuid=off ${POOL}/var/db
-zfs create -o compression=lz4 -o exec=on  -o setuid=off ${POOL}/var/db/pkg
-zfs create -o exec=off -o setuid=off ${POOL}/var/empty
-zfs create -o compression=lz4 -o exec=off -o setuid=off ${POOL}/var/log
-zfs create -o compression=lz4 -o exec=off -o setuid=off ${POOL}/var/mail
-zfs create -o exec=off -o setuid=off ${POOL}/var/run
-zfs create -o compression=lz4 -o exec=on -o setuid=off ${POOL}/var/tmp
+zfs create -o exec=off -o setuid=off ${POOL}/var/crash
+zfs create -o exec=off -o setuid=off ${POOL}/var/log
+zfs create -o atime=on ${POOL}/var/mail
+zfs create -o setuid=off ${POOL}/var/tmp
 
 chmod 1777 ${MNT}/${ROOTFS}/tmp
 chmod 1777 ${MNT}/${ROOTFS}/var/tmp
@@ -307,6 +300,7 @@ tzsetup
 echo Configuring mail aliases...
 cd /etc/mail; make aliases
 chmod 700 /root
+ln -s /usr/home /home
 EOF
 
 chroot ${MNT}/${ROOTFS} sh /tmp/chroot.sh
