@@ -167,7 +167,7 @@ fail2ban_enable="NO"
 pixelserv_enable="NO"
 
 slapd_enable="NO"
-slapd_flags='-h "ldapi:///var/run/openldap/ldapi/ ldap://${HOSTIP} ldaps://${HOSTIP}"'
+slapd_flags='-h "ldapi://%2fvar%2frun%2fopenldap%2fldapi/ ldap://${HOSTIP} ldaps://${HOSTIP}"'
 slapd_sockets="/var/run/openldap/ldapi"
 nscd_enable="NO"
 
