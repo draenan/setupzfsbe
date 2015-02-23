@@ -300,7 +300,7 @@ tzsetup
 echo Configuring mail aliases...
 cd /etc/mail; make aliases
 chmod 700 /root
-ln -s /usr/home /home
+ln -s usr/home /home
 EOF
 
 chroot ${MNT}/${ROOTFS} sh /tmp/chroot.sh
