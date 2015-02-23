@@ -3,7 +3,7 @@
 # setupzfsbe9.sh
 #
 # This script performs the initial installation of my server as detailed in the
-# "thalia-build.md" build guide document.  It also does some post-config setup,
+# "thalia.md" build guide document.  It also does some post-config setup,
 # but the majority still needs to be done by hand.
 #
 # Depending on how the initial variables are configured, it can be used for
