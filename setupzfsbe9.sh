@@ -87,11 +87,10 @@ else
     zpool import -o cachefile=/var/tmp/zpool.cache $POOL
 fi
 
-zfs set checksum=fletcher4 $POOL
 zfs set compression=lz4 $POOL
 zfs set atime=off $POOL
 
-zfs create ${POOL}/ROOT
+zfs create -o mountpoint=none ${POOL}/ROOT
 zfs create -o mountpoint=${MNT}/${ROOTFS} $ROOTFS
 mkdir -p ${MNT}/${ROOTFS}/usr
 mkdir ${MNT}/${ROOTFS}/var
@@ -100,6 +99,7 @@ zfs create -o mountpoint=${MNT}/${ROOTFS}/tmp -o exec=on -o setuid=off ${POOL}/t
 zfs create -o mountpoint=${MNT}/${ROOTFS}/usr -o canmount=off ${POOL}/usr
 zfs create ${POOL}/usr/home
 zfs create -o setuid=off ${POOL}/usr/ports
+zfs create ${POOL}/usr/src
 zfs create -o mountpoint=${MNT}/${ROOTFS}/var -o canmount=off ${POOL}/var
 zfs create -o exec=off -o setuid=off ${POOL}/var/crash
 zfs create -o exec=off -o setuid=off ${POOL}/var/log
