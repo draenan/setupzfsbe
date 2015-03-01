@@ -123,8 +123,6 @@ echo
 
 cp /var/tmp/zpool.cache ${MNT}/${ROOTFS}/boot/zfs/zpool.cache
 
-zfs set readonly=on ${POOL}/var/empty
-
 echo "Configuring files..."
 
 cat > ${MNT}/${ROOTFS}/etc/rc.conf << EOF
