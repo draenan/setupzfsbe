@@ -99,7 +99,6 @@ zfs create -o mountpoint=${MNT}/${ROOTFS}/tmp -o exec=on -o setuid=off ${POOL}/t
 zfs create -o mountpoint=${MNT}/${ROOTFS}/usr -o canmount=off ${POOL}/usr
 zfs create ${POOL}/usr/home
 zfs create -o setuid=off ${POOL}/usr/ports
-zfs create ${POOL}/usr/src
 zfs create -o mountpoint=${MNT}/${ROOTFS}/var -o canmount=off ${POOL}/var
 zfs create -o exec=off -o setuid=off ${POOL}/var/crash
 zfs create -o exec=off -o setuid=off ${POOL}/var/log
@@ -128,12 +127,14 @@ echo "Configuring files..."
 cat > ${MNT}/${ROOTFS}/etc/rc.conf << EOF
 zfs_enable="YES"
 
+clear_tmp_enable="YES"
+
 kldxref_enable="YES"
 kldxref_clobber="YES"
 
 hostname="${HOSTNAME}.${DOMAIN}"
 ifconfig_${IF}="inet ${HOSTIP} netmask 255.255.255.0"
-ifconfig_${IF}_alias0="inet ${HOSTIP_ALIAS} netmask 255.255.255.0"
+ifconfig_${IF}_alias0="inet ${HOSTIP_ALIAS} netmask 255.255.255.255"
 ifconfig_${IF}_ipv6="inet6 accept_rtadv"
 defaultrouter="${GATEWAY}"
 
@@ -191,8 +192,6 @@ nginx_enable="NO"
 php_fpm_enable="NO"
 fcgiwrap_enable="NO"
 fcgiwrap_user="www"
-
-ezjail_enable="NO"
 
 EOF
 
