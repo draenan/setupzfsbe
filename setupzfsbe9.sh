@@ -17,6 +17,9 @@ DISK2="ada1"
 
 #USE4K="YES"
 
+#ZFS_TUNE="kern.maxvnodes=250000\\
+#vfs.zfs.write_limit_override=1073741824"
+
 MNT="/tmp/mnt"
 POOL="zroot"
 BE="default"
@@ -245,6 +248,11 @@ EOF
 if [ ! -z "$DISK2" ]; then
     sed -e ' /geom_eli/ a\
 geom_mirror_load="YES"' -i '' ${MNT}/${ROOTFS}/boot/loader.conf
+fi
+
+if [ ! -z "$ZFS_TUNE" ]; then
+    sed -e "$ i\\
+$ZFS_TUNE" -i '' ${MNT}/${ROOTFS}/boot/loader.conf
 fi
 
 cat >> ${MNT}/${ROOTFS}/etc/sysctl.conf << EOF
