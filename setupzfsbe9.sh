@@ -175,17 +175,11 @@ openvpn_tcp_enable="NO"
 openvpn_tcp_configfile="/usr/local/etc/openvpn/openvpn_tcp.conf"
 gateway_enable="YES"
 
-#devfs_system_ruleset="system"
-
 mdnsd_enable="NO"
-
-dbus_enable="NO"
-
-cupsd_enable="NO"
 
 netatalk_enable="NO"
 
-samba_enable="NO"
+samba__server_enable="NO"
 winbindd_enable="NO"
 
 nginx_enable="NO"
