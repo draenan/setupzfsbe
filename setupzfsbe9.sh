@@ -252,7 +252,7 @@ fi
 
 if [ ! -z "$ZFS_TUNE" ]; then
     sed -e "$ i\\
-$ZFS_TUNE" -i '' ${MNT}/${ROOTFS}/boot/loader.conf
+${ZFS_TUNE}" -i '' ${MNT}/${ROOTFS}/boot/loader.conf
 fi
 
 cat >> ${MNT}/${ROOTFS}/etc/sysctl.conf << EOF
