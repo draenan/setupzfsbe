@@ -141,8 +141,6 @@ ifconfig_${IF}_alias0="inet ${HOSTIP_ALIAS} netmask 255.255.255.255"
 ifconfig_${IF}_ipv6="inet6 accept_rtadv"
 defaultrouter="${GATEWAY}"
 
-#cloned_interfaces="\${cloned_interfaces} lo1 lo2"
-
 firewall_enable="NO"
 firewall_script="/usr/local/etc/ipfw/ipfw.rules"
 firewall_logging="YES"
