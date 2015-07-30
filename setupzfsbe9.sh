@@ -287,22 +287,6 @@ sed -e '/PATH=/ s^PATH=\(.*\)\(/usr/local/sbin:/usr/local/bin:\)\(.*\)^PATH=\2\1
 sed -e '/^IgnorePaths/ s^$^ /boot/kernel/linker.hints^' \
     -i '' ${MNT}/${ROOTFS}/etc/freebsd-update.conf
 
-cat > ${MNT}/${ROOTFS}/tmp/chroot.sh << EOF
-resolvconf -u
-sed -e '/[[:space:]]*:path/ s#:path=\(.*\)\(/usr/local/sbin /usr/local/bin \)\(.*\):\\\\#:path=\2\1\3:\\\\#' -i '' /etc/login.conf
-cap_mkdb /etc/login.conf
-echo Setting root password...
-passwd
-tzsetup
-echo Configuring mail aliases...
-cd /etc/mail; make aliases
-chmod 700 /root
-ln -s usr/home /home
-EOF
-
-chroot ${MNT}/${ROOTFS} sh /tmp/chroot.sh
-rm ${MNT}/${ROOTFS}/tmp/chroot.sh
-
 printf "# Device\t\tMountpoint\tFStype\tOptions\tDump\tPass#\n" >  ${MNT}/${ROOTFS}/etc/fstab
 if [ -z "$DISK2" ]; then
     printf "/dev/gpt/swap0\t\tnone\t\tswap\tsw\t0\t0\n" >> ${MNT}/${ROOTFS}/etc/fstab
@@ -310,6 +294,22 @@ else
     printf "/dev/mirror/swap\tnone\t\tswap\tsw\t0\t0\n" >> ${MNT}/${ROOTFS}/etc/fstab
 fi
 printf "fdesc\t\t\t/dev/fd\t\tfdescfs\trw\t0\t0\n" >> ${MNT}/${ROOTFS}/etc/fstab
+
+cat > ${MNT}/${ROOTFS}/tmp/chroot.sh << EOF
+
+resolvconf -u
+sed -e '/[[:space:]]*:path/ s#:path=\(.*\)\(/usr/local/sbin /usr/local/bin \)\(.*\):\\\\#:path=\2\1\3:\\\\#' -i '' /etc/login.conf
+cap_mkdb /etc/login.conf
+cd /etc/mail; make aliases
+chmod 700 /root
+ln -s usr/home /home
+tzsetup
+echo Setting root password...
+passwd
+EOF
+
+chroot ${MNT}/${ROOTFS} sh /tmp/chroot.sh
+rm ${MNT}/${ROOTFS}/tmp/chroot.sh
 
 echo Unmounting ZFS filesystems...
 
