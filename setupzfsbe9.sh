@@ -34,7 +34,7 @@ IF="em0"
 
 DOMAIN="draenan.net"
 NAMESERVER="127.0.0.1"
-NAMESERVER6="::1"
+NAMESERVER6=
 
 ATKBD_DISABLED="0"
 
@@ -217,6 +217,8 @@ if [ ! -z "$NAMESERVER6" ]; then
     echo "name_servers=\"${NAMESERVER} ${NAMESERVER6}\"" >> ${MNT}/${ROOTFS}/etc/resolvconf.conf
 else
     echo "name_servers=\"${NAMESERVER}\"" >> ${MNT}/${ROOTFS}/etc/resolvconf.conf
+    sed -e '/named_enable/ a\
+named_flags="-4"' -i '' ${MNT}/${ROOTFS}/etc/rc.conf
 fi
 
 sed -e "s/localhost.my.domain/localhost.${DOMAIN}/" -i '' ${MNT}/${ROOTFS}/etc/hosts
@@ -224,10 +226,6 @@ printf "${HOSTIP}\t${HOSTNAME}\t${HOSTNAME}.${DOMAIN}\n" >> ${MNT}/${ROOTFS}/etc
 if [ ! -z "$HOSTIP6" ]; then
     printf "${HOSTIP6}\t${HOSTNAME}\t${HOSTNAME}.${DOMAIN}\n" >> ${MNT}/${ROOTFS}/etc/hosts
 fi
-
-touch ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind
-chown bind ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind
-chmod 600 ${MNT}/${ROOTFS}/etc/namedb/working/managed-keys.bind
 
 cat > ${MNT}/${ROOTFS}/boot/loader.conf << EOF
 accf_http_load="YES"
