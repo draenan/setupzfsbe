@@ -180,7 +180,7 @@ mdnsd_enable="NO"
 
 netatalk_enable="NO"
 
-samba__server_enable="NO"
+samba_server_enable="NO"
 winbindd_enable="NO"
 
 nginx_enable="NO"
