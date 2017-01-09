@@ -148,6 +148,9 @@ firewall_quiet="YES"
 
 sshd_enable="YES"
 
+ntpdate_enable="YES"
+ntpdate_hosts="au.pool.ntp.org"
+
 ntpd_enable="YES"
 openntpd_enable="NO"
 
@@ -238,7 +241,6 @@ geom_eli_load="YES"
 hint.atkbdc.0.disabled="${ATKBD_DISABLED}"
 hint.atkbd.0.disabled="${ATKBD_DISABLED}"
 net.inet.ip.fw.default_to_accept="1"
-vfs.root.mountfrom="zfs:${ROOTFS}"
 EOF
 
 if [ ! -z "$DISK2" ]; then
@@ -261,6 +263,7 @@ NO_PROFILE= true
 OPTIONS_UNSET= X11
 USE_SVN= true
 WITH_PKGNG= yes
+WANT_OPENLDAP_SASL= yes
 EOF
 
 cat > ${MNT}/${ROOTFS}/etc/src.conf << EOF
